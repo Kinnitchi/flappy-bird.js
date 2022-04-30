@@ -127,17 +127,3 @@ function FlappyBird() {
 }
 
 new FlappyBird().start()
-
-
-// TESTE ANIMAÇÂP
-// const b = new Barrels(700, 1200, 200, 400);
-// const bird = new Bird(700);
-// const a = document.querySelector('[wm-flappy]');
-
-// a.appendChild(bird.elementDom);
-// a.appendChild(new Progress().elementDom)
-// b.pair.forEach(pair => a.appendChild(pair.elementDom));
-// setInterval(() => {
-//   b.animate();
-//   bird.animate();
-// }, 20);
