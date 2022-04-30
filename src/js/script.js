@@ -1,10 +1,10 @@
 function newElement(tagName, className) {
   const element = document.createElement(tagName);
   element.className = className;
-  return element
+  return element;
 }
 
-function Barrels(reverse = false) {
+function Barrel(reverse = false) {
   this.divBarrels = newElement('div', 'barrel');
 
   const border = newElement('div', 'border');
@@ -12,18 +12,14 @@ function Barrels(reverse = false) {
   this.divBarrels.appendChild(reverse ? body : border);
   this.divBarrels.appendChild(reverse ? border : body);
 
-  this.setHeight = height => body.style.height = `${height}px`
+  this.setHeight = height => body.style.height = `${height}px`;
 }
-
-// const b = new Barrels(true);
-// b.setHeight(200);
-// document.querySelector('[wm-flappy]').appendChild(b.divBarrels)
 
 function BarrelsPair(height, aperture, x) {
   this.divBarrels = newElement('div', 'barrel-pair');
 
-  this.roof = new Barrels(true);
-  this.ground = new Barrels(false);
+  this.roof = new Barrel(true);
+  this.ground = new Barrel(false);
 
   this.divBarrels.appendChild(this.roof.divBarrels);
   this.divBarrels.appendChild(this.ground.divBarrels);
@@ -43,5 +39,38 @@ function BarrelsPair(height, aperture, x) {
   this.setX(x);
 }
 
-const b = new BarrelsPair(700, 200, 400);
-document.querySelector('[wm-flappy]').appendChild(b.divBarrels);
+function Barrels(height, large, aperture, space, notifyPoint) {
+  this.pair = [
+    new BarrelsPair(height, aperture, large),
+    new BarrelsPair(height, aperture, large + space),
+    new BarrelsPair(height, aperture, large + space * 2),
+    new BarrelsPair(height, aperture, large + space * 3)
+  ];
+
+  const displacement = 3;
+  this.animate = () => {
+    this.pair.forEach(pair => {
+      pair.setX(pair.getX() - displacement);
+
+      // quando o elemento sai da area do game
+      if (pair.getX() < -pair.getLarge()) {
+        pair.setX(pair.getX() + space * this.pair.length);
+        pair.sortAperture();
+      }
+
+      const mid = large / 2;
+      const middleCross = pair.getX() + displacement >= mid &&
+        pair.getX() < mid
+      if (middleCross) notifyPoint()
+    })
+  }
+}
+
+
+// TESTE ANIMAÇÂP
+const b = new Barrels(700, 1200, 200, 400);
+const a = document.querySelector('[wm-flappy]');
+b.pair.forEach(pair => a.appendChild(pair.divBarrels));
+setInterval(() => {
+  b.animate()
+}, 20);
