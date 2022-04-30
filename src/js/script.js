@@ -83,24 +83,61 @@ function Bird(heightGame) {
     const heightMax = heightGame - this.elementDom.clientHeight;
 
     if (newY <= 0) {
-      this.setY(0)
+      this.setY(0);
     } else if (newY >= heightMax) {
-      this.setY(heightMax)
+      this.setY(heightMax);
     } else {
-      this.setY(newY)
+      this.setY(newY);
     }
   }
-  this.setY(heightGame / 2)
+  this.setY(heightGame / 2);
 }
 
-// TESTE ANIMAÇÂP
-const b = new Barrels(700, 1200, 200, 400);
-const bird = new Bird(700)
-const a = document.querySelector('[wm-flappy]');
+function Progress() {
+  this.elementDom = newElement('span', 'progress');
+  this.addPoints = points => {
+    this.elementDom.innerHTML = points;
+  }
+  this.addPoints(0)
+}
 
-a.appendChild(bird.elementDom)
-b.pair.forEach(pair => a.appendChild(pair.elementDom));
-setInterval(() => {
-  b.animate();
-  bird.animate();
-}, 20);
+function FlappyBird() {
+  let points = 0;
+
+  const gameArea = document.querySelector('[wm-flappy]');
+  const height = gameArea.clientHeight;
+  const large = gameArea.clientWidth;
+
+  const progress = new Progress();
+  const barrels = new Barrels(height, large, 200, 400,
+    () => progress.addPoints(++points));
+  const bird = new Bird(height);
+
+  gameArea.appendChild(progress.elementDom);
+  gameArea.appendChild(bird.elementDom);
+  barrels.pair.forEach(pair => gameArea.appendChild(pair.elementDom));
+
+  this.start = () => {
+    //loop for game
+    const timer = setInterval(() => {
+      barrels.animate()
+      bird.animate()
+    }, 20)
+  }
+}
+
+new FlappyBird().start()
+
+
+// TESTE ANIMAÇÂP
+// const b = new Barrels(700, 1200, 200, 400);
+// const bird = new Bird(700);
+// const a = document.querySelector('[wm-flappy]');
+
+// a.appendChild(bird.elementDom);
+// a.appendChild(new Progress().elementDom)
+// b.pair.forEach(pair => a.appendChild(pair.elementDom));
+// setInterval(() => {
+//   b.animate();
+//   bird.animate();
+// }, 20);
