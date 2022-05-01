@@ -107,6 +107,31 @@ function Progress() {
   this.addPoints(0)
 }
 
+function overlapping(elementA, elementB) {
+  const a = elementA.getBoundingClientRect();
+  const b = elementB.getBoundingClientRect();
+
+  const horizontal = a.left + a.width >= b.left &&
+    b.left + b.width >= a.left;
+  const vertical = a.top + a.height >= b.top &&
+    b.top + b.height >= a.top
+
+  return horizontal && vertical
+}
+
+function collision(bird, barrels) {
+  let collision = false;
+  barrels.pair.forEach(BarrelsPair => {
+    if (!collision) {
+      const rooftop = BarrelsPair.roof.elementDom
+      const groundend = BarrelsPair.ground.elementDom
+      collision = overlapping(bird.elementDom, rooftop) ||
+        overlapping(bird.elementDom, groundend)
+    }
+  })
+  return collision
+}
+
 function FlappyBird() {
   let points = 0;
 
@@ -126,8 +151,11 @@ function FlappyBird() {
   this.start = () => {
     //loop for game
     const timer = setInterval(() => {
-      barrels.animate()
-      bird.animate()
+      barrels.animate();
+      bird.animate();
+      if (collision(bird, barrels)) {
+        clearInterval(timer)
+      }
     }, 20)
   }
 }
