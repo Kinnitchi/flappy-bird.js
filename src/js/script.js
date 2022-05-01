@@ -154,7 +154,9 @@ function FlappyBird() {
       barrels.animate();
       bird.animate();
       if (collision(bird, barrels)) {
-        clearInterval(timer)
+        clearInterval(timer);
+        alert(`Sua pontuação foi de ${points} `)
+        window.location.reload(false);
       }
     }, 20)
   }
