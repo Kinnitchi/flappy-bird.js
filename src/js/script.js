@@ -1,3 +1,9 @@
+function RemoveSelection() {
+  if (window.getSelection) {
+    window.getSelection().removeAllRanges();
+  }
+}
+
 function newElement(tagName, className) {
   const element = document.createElement(tagName);
   element.className = className;
